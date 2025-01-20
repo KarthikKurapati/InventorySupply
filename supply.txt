@@ -1,0 +1,7 @@
+|Blue Cross,Blue,Red Striped,Black,
+|Sari,Jeans,Shirt,Jeans,
+|23.0,20.0,73.0,62.0,
+|67.0,34.0,90.0,78.0,
+|Mumbai,Delhi,Mumbai,Dehli,
+|1,2,3,4,
+|
