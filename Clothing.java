@@ -82,7 +82,8 @@ public class Clothing extends JPanel{
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("sell w");
+                    Supply.sellCommand(itemCode);
+                    setVisible(false);
                 }
                 
             });

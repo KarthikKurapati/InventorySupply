@@ -11,133 +11,162 @@ public class Supply {
     private JFrame frame, addFrame;
     private JPanel panel;
     private JScrollPane localPanel;
-    private JPanel contentPanel;
-    private JButton newButton, exitButton, addButton, cancelButton;
-    private JLabel title, title2, itemTypeLabel, itemCodeLabel, itemSubcategoryLabel, buyPriceLabel, predictedSellPriceLabel, warehouseHousedLabel, invalidLabel;
-    private JTextField itemTypeField, warehouseHousedField, buypriceField, predictedSellPricTextField, itemCodeField;
-    private JComboBox itemSubcategoryBox;
-    private ArrayList<Clothing> clothingList;
-    private ArrayList<String> itemTypeList = new ArrayList<String>();
-    private ArrayList<String> typeList = new ArrayList<String>();
-    private ArrayList<Integer> codeList = new ArrayList<Integer>();
-    private ArrayList<Double> buyList = new ArrayList<Double>();
-    private ArrayList<Double> sellList = new ArrayList<Double>();
-    private ArrayList<String> locationList = new ArrayList<String>();
-    private ArrayList<ArrayList> arrayParser = new ArrayList<ArrayList>();
-    public Supply() {
-        ClickListener click = new ClickListener();
-        frame = new JFrame();
-        frame.setBackground(new Color(190, 199, 212));
-
-        panel = new JPanel();
-        panel.setBounds(0, 0, 700, 450);
-        panel.setLayout(null);
-        panel.setBackground(new Color(190, 199, 212));
-
-        // Create content panel for scrollable content
-        contentPanel = new JPanel();
-        contentPanel.setLayout(null);
-        contentPanel.setBackground(new Color(237, 237, 237));
-        contentPanel.setPreferredSize(new Dimension(645, 1000));  // Adjust height as needed
-
-        // Setup scroll pane with content panel
-        localPanel = new JScrollPane(contentPanel);
-        localPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        localPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        localPanel.setWheelScrollingEnabled(true);
-        localPanel.setBounds(20, 45, 645, 300);
-
-        panel.add(localPanel);
-        clothingList = new ArrayList<Clothing>();
-
-        createLabels();
-        try {
-            validatePrevious();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-                createButtons(click);
+    private static JPanel contentPanel;
+        private JButton newButton, exitButton, addButton, cancelButton;
+        private JLabel title, title2, itemTypeLabel, itemCodeLabel, itemSubcategoryLabel, buyPriceLabel, predictedSellPriceLabel, warehouseHousedLabel, invalidLabel;
+        private JTextField itemTypeField, warehouseHousedField, buypriceField, predictedSellPricTextField, itemCodeField;
+        private JComboBox itemSubcategoryBox;
+        private static ArrayList<Clothing> clothingList;
+            private ArrayList<String> itemTypeList = new ArrayList<String>();
+            private ArrayList<String> typeList = new ArrayList<String>();
+            public ArrayList<Integer> codeList = new ArrayList<Integer>();
+            private ArrayList<Double> buyList = new ArrayList<Double>();
+            private ArrayList<Double> sellList = new ArrayList<Double>();
+            private ArrayList<String> locationList = new ArrayList<String>();
+            private ArrayList<ArrayList> arrayParser = new ArrayList<ArrayList>();
+            Encryption encrypt;
+            public Supply() {
+                encrypt = new Encryption();
+                ClickListener click = new ClickListener();
         
-                frame.add(panel);
-                frame.setSize(700, 450);
-                frame.setTitle("Inventory Manager");
-                frame.setLayout(null);
-                frame.setVisible(true);
-                frame.setResizable(false);
-                frame.setLocationRelativeTo(null);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            }
+                frame = new JFrame();
+                frame.setBackground(new Color(190, 199, 212));
         
-            private void createButtons(ClickListener c) {
-        newButton = new JButton("New");
-        exitButton = new JButton("Exit");
-        newButton.setBounds(20, 350, 250, 30);
-        exitButton.setBounds(565, 350, 100, 30);
-
-        newButton.addActionListener(c);
-        exitButton.addActionListener(c);
-        panel.add(exitButton);
-        panel.add(newButton);
-    }
-    @SuppressWarnings("unchecked")
-    private void validatePrevious() throws IOException {
-        arrayParser.add(itemTypeList);
-        arrayParser.add(typeList);
-        arrayParser.add(buyList);
-        arrayParser.add(sellList);
-        arrayParser.add(locationList);
-        arrayParser.add(codeList);
-        File file = new File("supply.txt");
-            FileReader fr = new FileReader(file);
-            int ch;
-            String setter = "";
-            int i = 0; 
-            while ((ch=fr.read()) != -1) {
-                char d = (char)ch;
-                if(d == ','){
-                    arrayParser.get(i - 1).add(setter);
-                    setter = "";
-                }else if(d == '|'){
-                    setter = "";
-                    i++;
-                }else{
-                    setter += d;
+                panel = new JPanel();
+                panel.setBounds(0, 0, 700, 450);
+                panel.setLayout(null);
+                panel.setBackground(new Color(190, 199, 212));
+        
+                // Create content panel for scrollable content
+                contentPanel = new JPanel();
+                contentPanel.setLayout(null);
+                contentPanel.setBackground(new Color(237, 237, 237));
+                contentPanel.setPreferredSize(new Dimension(645, 1000));  // Adjust height as needed
+        
+                // Setup scroll pane with content panel
+                localPanel = new JScrollPane(contentPanel);
+                localPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                localPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                localPanel.setWheelScrollingEnabled(true);
+                localPanel.setBounds(20, 45, 645, 300);
+        
+                panel.add(localPanel);
+                clothingList = new ArrayList<Clothing>();
+        
+                createLabels();
+                try {
+                    validatePrevious();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
-             }
-             System.out.println(arrayParser.toString());
-             classMaker();
-             fr.close();
-    }
-    private void classMaker() {
-    for (int i = 0; i < arrayParser.get(0).size(); i++) {
-        try {
-            String subcat = arrayParser.get(1).get(i)+ "";
-            String type = arrayParser.get(0).get(i)+ "";
-            String loc = arrayParser.get(5).get(i)+ "";
-            double sell = Double.parseDouble(arrayParser.get(3).get(i) + "");
-            double buy = Double.parseDouble(arrayParser.get(2).get(i)+ "");
-            int code = Integer.parseInt(arrayParser.get(4).get(i)+ "");
-            clothingList.add(new Clothing(subcat,type,loc,sell,buy,code));
-        } catch (Exception e) {
-            System.out.println("Error at index " + i);
-            System.out.println("Location: " + arrayParser.get(4).get(i));
-            System.out.println("Code: " + arrayParser.get(5).get(i));
-            e.printStackTrace();
-            break;
-        }
-    }
-    reloadClothing();
-}
-    private void reloadClothing(){
-        int xIndex = 0;
-        int yIndex = 0;
-        for (int i = 0; i < clothingList.size(); i++) {
-            if (i * 215 % 645 == 0 && i != 0) {
-                yIndex++;
+                        createButtons(click);
+                
+                        frame.add(panel);
+                        frame.setSize(700, 450);
+                        frame.setTitle("Inventory Manager");
+                        frame.setLayout(null);
+                        frame.setVisible(true);
+                        frame.setResizable(false);
+                        frame.setLocationRelativeTo(null);
+                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    }
+                
+                    private void createButtons(ClickListener c) {
+                newButton = new JButton("New");
+                exitButton = new JButton("Exit");
+                newButton.setBounds(20, 350, 250, 30);
+                exitButton.setBounds(565, 350, 100, 30);
+        
+                newButton.addActionListener(c);
+                exitButton.addActionListener(c);
+                panel.add(exitButton);
+                panel.add(newButton);
             }
-            clothingList.get(i).setBounds(xIndex * 215, yIndex * 110, 215, 110);
-            contentPanel.add(clothingList.get(i));
+            public static void sellCommand(int c){
+                for(int i = 0; i < clothingList.size();i++){
+                    if(i == 0){
+                        if(clothingList.get(i).getItemCode() == c){
+                            clothingList.removeFirst();
+                        }
+                    }
+                    if(clothingList.get(i).getItemCode() == c){
+                        clothingList.remove(i - 1);
+                        break;
+                    }
+                }
+                reloadClothing();
+            }
+            @SuppressWarnings("unchecked")
+            private void validatePrevious() throws IOException {
+                arrayParser.add(itemTypeList);
+                arrayParser.add(typeList);
+                arrayParser.add(buyList);
+                arrayParser.add(sellList);
+                arrayParser.add(locationList);
+                arrayParser.add(codeList);
+                try {
+                    encrypt.decryptFile("supply.txt", "decryptedSupply.txt");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                File file = new File("decryptedSupply.txt");
+                    FileReader fr = new FileReader(file);
+                    int ch;
+                    String setter = "";
+                    int i = 0; 
+                    while ((ch=fr.read()) != -1) {
+                        char d = (char)ch;
+                        if(d == ','){
+                            arrayParser.get(i - 1).add(setter);
+                            setter = "";
+                        }else if(d == '|'){
+                            setter = "";
+                            i++;
+                        }else{
+                            setter += d;
+                        }
+                        }
+                    //  System.out.println(arrayParser.toString());
+                        classMaker();
+                        try {
+                        encrypt.encryptFile("decryptedSupply.txt", "Supply.txt");
+                        encrypt.encryptFile("decryptedSupply.txt", "decryptedSupply.txt");
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                        fr.close();
+            }
+            private void classMaker() {
+            for (int i = 0; i < arrayParser.get(0).size(); i++) {
+                try {
+                    String subcat = arrayParser.get(1).get(i)+ "";
+                    String type = arrayParser.get(0).get(i)+ "";
+                    String loc = arrayParser.get(5).get(i)+ "";
+                    double sell = Double.parseDouble(arrayParser.get(3).get(i) + "");
+                    double buy = Double.parseDouble(arrayParser.get(2).get(i)+ "");
+                    int code = Integer.parseInt(arrayParser.get(4).get(i)+ "");
+                    clothingList.add(new Clothing(subcat,type,loc,sell,buy,code));
+                } catch (Exception e) {
+                    System.out.println("Error at index " + i);
+                    System.out.println("Location: " + arrayParser.get(4).get(i));
+                    System.out.println("Code: " + arrayParser.get(5).get(i));
+                    e.printStackTrace();
+                    break;
+                }
+            }
+            reloadClothing();
+            }
+            private static void reloadClothing(){
+            int xIndex = 0;
+            int yIndex = 0;
+            for (int i = 0; i < clothingList.size(); i++) {
+                if (i * 215 % 645 == 0 && i != 0) {
+                    yIndex++;
+                }
+                clothingList.get(i).setBounds(xIndex * 215, yIndex * 110, 215, 110);
+                contentPanel.add(clothingList.get(i));
             contentPanel.revalidate();
             contentPanel.repaint();
             
@@ -316,25 +345,22 @@ public class Supply {
             // }
             // localPanel.revalidate();
         }
-        private void validatePrevious() throws IOException{
-            File file = new File("supply.txt");
-            FileReader fr = new FileReader(file);
-            int ch;
-            while ((ch=fr.read()) != -1) {
-                System.out.print((char)ch);
-             }
-             fr.close();
-        }
         private void handleWriter(Clothing f){
             try {
-                File file = new File("supply.txt");
+                
+                try {
+                    encrypt.decryptFile("supply.txt", "decryptedSupply.txt");
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                File file = new File("decryptedSupply.txt");
                 FileReader fr = new FileReader(file);
                 String wholeFile = "";
                 int ch;
                 int index = 0;
                 while ((ch=fr.read()) != -1) {
                     if((char)ch == '|'){
-                        System.out.println(index);
 
                         if(index == 1){
                             wholeFile = wholeFile.substring(0, wholeFile.length() - 1);
@@ -365,16 +391,20 @@ public class Supply {
                     wholeFile = wholeFile + (char)ch;
                     
                  }
-                System.out.println(wholeFile);
-                FileWriter myWriter = new FileWriter("supply.txt");
+                FileWriter myWriter = new FileWriter("decryptedSupply.txt");
                 myWriter.write(wholeFile);
                 myWriter.close();
-                System.out.println("Successfully wrote to the file.");
+                encrypt.encryptFile("decryptedSupply.txt", "supply.txt");
+                encrypt.encryptFile("decryptedSupply.txt", "decryptedSupply.txt");
             } catch (IOException e) {
-                System.out.println("An error occurred.");
+                System.out.println("An error occurred in writer handling.");
                 e.printStackTrace();
-            }
+            } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
         }
+
     }
 }
 
