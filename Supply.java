@@ -86,8 +86,8 @@ public class Supply {
         arrayParser.add(typeList);
         arrayParser.add(buyList);
         arrayParser.add(sellList);
-        arrayParser.add(codeList);
         arrayParser.add(locationList);
+        arrayParser.add(codeList);
         File file = new File("supply.txt");
             FileReader fr = new FileReader(file);
             int ch;
@@ -109,21 +109,26 @@ public class Supply {
              classMaker();
              fr.close();
     }
-    private void classMaker(){
-        for(int i = 0 ; i < arrayParser.get(0).size(); i++){
-            try {
-                clothingList.add(new Clothing(typeList.get(i) + "" , 
-                itemTypeList.get(i) + "" , locationList.get(i) + "", 
-                Double.parseDouble(sellList.get(i)+ ""), 
-                Double.parseDouble(buyList.get(i)+ ""), 
-                Integer.parseInt(codeList.get(i) + "")));
-                
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+    private void classMaker() {
+    for (int i = 0; i < arrayParser.get(0).size(); i++) {
+        try {
+            String subcat = arrayParser.get(1).get(i)+ "";
+            String type = arrayParser.get(0).get(i)+ "";
+            String loc = arrayParser.get(5).get(i)+ "";
+            double sell = Double.parseDouble(arrayParser.get(3).get(i) + "");
+            double buy = Double.parseDouble(arrayParser.get(2).get(i)+ "");
+            int code = Integer.parseInt(arrayParser.get(4).get(i)+ "");
+            clothingList.add(new Clothing(subcat,type,loc,sell,buy,code));
+        } catch (Exception e) {
+            System.out.println("Error at index " + i);
+            System.out.println("Location: " + arrayParser.get(4).get(i));
+            System.out.println("Code: " + arrayParser.get(5).get(i));
+            e.printStackTrace();
+            break;
         }
-        reloadClothing();
     }
+    reloadClothing();
+}
     private void reloadClothing(){
         int xIndex = 0;
         int yIndex = 0;
@@ -142,6 +147,11 @@ public class Supply {
                 xIndex++;
             }
         }
+        int totalHeight = (yIndex + 1) * 110 + 50; // Height per row (110) plus padding
+        contentPanel.setPreferredSize(new Dimension(645, totalHeight));
+        
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }
 
     private void createLabels() {

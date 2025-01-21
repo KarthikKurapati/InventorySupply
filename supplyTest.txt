@@ -1,4 +1,4 @@
-|Blue Cross,Red Pattern,1,1,
+|Blue Cross,Red Pattern,1,
 |Sari,Shirt,Jeans,
 |12.5,22.2,2.0,
 |24.2,43.2,3.0,
